@@ -130,7 +130,7 @@ GHR4_SWD5_S2_PROJECT1/
 
 ## 📄 Requirements Document
 
-The full Software Requirements Specification is available at [`docs/requirements/`](docs/requirements/).
+The full Software Requirements Specification is available at [`docs/requirements/`].
 
 ## 📊 Presentation
 
