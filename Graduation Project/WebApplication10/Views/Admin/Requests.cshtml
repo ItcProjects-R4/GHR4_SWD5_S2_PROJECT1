@@ -1,0 +1,52 @@
+@model IEnumerable<CourseRequest>
+@{ ViewData["Title"] = "Course Requests"; ViewData["ActiveNav"] = "Requests"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="card">
+    <h3 style="font-size:17px;">Course Requests</h3>
+    @if (!Model.Any())
+    {
+        <p class="text-sm text-muted mt-4">No requests yet.</p>
+    }
+    else
+    {
+        <table class="table mt-4">
+            <thead>
+                <tr><th>Title</th><th>Contributor</th><th>Track</th><th>Submitted</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    var cls = r.Status == "approved" ? "badge-success"
+                            : r.Status == "rejected" ? ""
+                            : "badge-warm";
+                    <tr>
+                        <td style="font-weight:500;max-width:200px;">@r.Title</td>
+                        <td>@(r.User?.Name ?? r.ProviderName ?? "—")</td>
+                        <td>@(r.Track?.Name ?? "—")</td>
+                        <td class="text-muted" style="font-size:13px;">@r.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td><span class="badge @cls">@r.Status</span></td>
+                        <td style="white-space:nowrap;">
+                            @if (r.Status == "pending")
+                            {
+                                <form asp-controller="Admin" asp-action="ApproveRequest" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@r.Id" />
+                                    <button type="submit" class="btn btn-primary btn-sm">Approve</button>
+                                </form>
+                                <form asp-controller="Admin" asp-action="RejectRequest" method="post" style="display:inline;margin-left:4px;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@r.Id" />
+                                    <button type="submit" class="btn btn-outline btn-sm">Reject</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-xs text-muted">—</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

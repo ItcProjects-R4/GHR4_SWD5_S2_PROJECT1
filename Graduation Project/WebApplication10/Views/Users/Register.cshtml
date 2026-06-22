@@ -1,0 +1,40 @@
+@{ ViewData["Title"] = "Join Pathway"; }
+
+<div class="auth-wrap" style="max-width:820px;">
+    <div style="text-align:center;margin-bottom:32px;">
+        <div class="brand flex-center" style="justify-content:center;margin-bottom:16px;">
+            <div class="brand-mark">P</div>
+            <span style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;">Pathway</span>
+        </div>
+        <h1 style="font-size:32px;">Join as…</h1>
+        <p class="text-muted text-sm mt-2">Choose the account type that fits how you'll use the platform.</p>
+    </div>
+
+    <div class="grid grid-2">
+        <a asp-controller="Users" asp-action="RegisterStudent"
+           class="card card-hover" style="display:block;text-align:center;padding:36px 24px;">
+            <div style="font-size:48px;">🎓</div>
+            <h3 style="font-size:20px;margin-top:12px;">Student</h3>
+            <p class="text-sm text-muted mt-2">Explore initiatives, join tracks, track progress, view analytics and discover opportunities.</p>
+            <div class="flex gap-2 mt-4" style="justify-content:center;">
+                <span class="badge">Free</span>
+                <span class="badge">Most popular</span>
+            </div>
+        </a>
+
+        <a asp-controller="Users" asp-action="RegisterContributor"
+           class="card card-hover" style="display:block;text-align:center;padding:36px 24px;">
+            <div style="font-size:48px;">🤝</div>
+            <h3 style="font-size:20px;margin-top:12px;">Contributor</h3>
+            <p class="text-sm text-muted mt-2">Training centers and instructors submit course requests for admin review and publication.</p>
+            <div class="flex gap-2 mt-4" style="justify-content:center;">
+                <span class="badge badge-warm">Org / Instructor</span>
+            </div>
+        </a>
+    </div>
+
+    <p class="text-sm text-muted mt-6" style="text-align:center;">
+        Already have an account?
+        <a asp-controller="Users" asp-action="Login" style="color:var(--primary);font-weight:500;">Sign in</a>
+    </p>
+</div>

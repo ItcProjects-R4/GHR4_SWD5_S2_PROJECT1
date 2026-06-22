@@ -1,0 +1,71 @@
+@model User
+@{ ViewData["Title"] = "User Details"; Layout = "~/Views/Shared/_AppLayout.cshtml"; ViewData["ActiveNav"] = "Users"; }
+
+<div class="flex-between mb-4">
+    <a asp-controller="Admin" asp-action="Users" class="text-sm text-muted">← Users</a>
+</div>
+
+<div class="grid grid-2">
+    <div class="card">
+        <h3 style="font-size:17px;">Account info</h3>
+        <table class="table mt-4">
+            <tr><td style="font-weight:600;width:120px;">Name</td><td>@Model.Name</td></tr>
+            <tr><td style="font-weight:600;">Email</td><td>@Model.Email</td></tr>
+            <tr><td style="font-weight:600;">Role</td><td><span class="badge">@Model.Role</span></td></tr>
+            <tr><td style="font-weight:600;">Joined</td><td>@Model.CreatedAt.ToString("MMM d, yyyy")</td></tr>
+        </table>
+
+        <div class="flex gap-2 mt-5">
+            <a asp-controller="Users" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline btn-sm">Edit</a>
+        </div>
+    </div>
+
+    @if (Model.StudentProfile != null)
+    {
+        <div class="card">
+            <h3 style="font-size:17px;">Student profile</h3>
+            <table class="table mt-4">
+                <tr><td style="font-weight:600;width:120px;">University</td><td>@(Model.StudentProfile.University ?? "—")</td></tr>
+                <tr><td style="font-weight:600;">LinkedIn</td><td>@(Model.StudentProfile.LinkedInLink ?? "—")</td></tr>
+                <tr><td style="font-weight:600;">GitHub</td><td>@(Model.StudentProfile.GithubLink ?? "—")</td></tr>
+            </table>
+        </div>
+    }
+
+    @if (Model.StudentAnalytics != null)
+    {
+        <div class="card">
+            <h3 style="font-size:17px;">Analytics</h3>
+            <div class="grid grid-2 mt-4">
+                <div class="kpi" style="padding:16px;">
+                    <div class="label">Completed</div>
+                    <div class="val" style="font-size:28px;">@Model.StudentAnalytics.TotalCoursesCompleted</div>
+                </div>
+                <div class="kpi" style="padding:16px;">
+                    <div class="label">Rate</div>
+                    <div class="val" style="font-size:28px;">@Model.StudentAnalytics.CompletionRate%</div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.Enrollments?.Any() == true)
+    {
+        <div class="card">
+            <h3 style="font-size:17px;">Enrollments (@Model.Enrollments.Count)</h3>
+            <table class="table mt-4">
+                <thead><tr><th>Course</th><th>Status</th><th>Progress</th></tr></thead>
+                <tbody>
+                    @foreach (var e in Model.Enrollments)
+                    {
+                        <tr>
+                            <td>@(e.Course?.Title ?? "—")</td>
+                            <td><span class="badge">@e.Status</span></td>
+                            <td>@((int)e.ProgressPercentage)%</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

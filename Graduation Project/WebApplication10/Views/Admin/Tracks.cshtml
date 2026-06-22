@@ -1,0 +1,27 @@
+@model IEnumerable<Track>
+@{ ViewData["Title"] = "Tracks"; ViewData["ActiveNav"] = "Tracks"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="card">
+    <div class="flex-between">
+        <h3 style="font-size:17px;">Tracks</h3>
+        <a asp-controller="Admin" asp-action="CreateTrack" class="btn btn-primary btn-sm">+ New</a>
+    </div>
+    <table class="table mt-4">
+        <thead><tr><th>Track</th><th>Initiative</th><th>Type</th><th>Courses</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var t in Model)
+            {
+                <tr>
+                    <td style="font-weight:500;">@t.Name</td>
+                    <td>@(t.Initiative?.Name ?? "—")</td>
+                    <td>@(t.Type ?? "—")</td>
+                    <td>@(t.Courses?.Count ?? 0)</td>
+                    <td style="white-space:nowrap;">
+                        <a asp-controller="Admin" asp-action="EditTrack"   asp-route-id="@t.Id" class="btn btn-ghost btn-sm">Edit</a>
+                        <a asp-controller="Admin" asp-action="DeleteTrack" asp-route-id="@t.Id" class="btn btn-ghost btn-sm" style="color:var(--destructive);">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

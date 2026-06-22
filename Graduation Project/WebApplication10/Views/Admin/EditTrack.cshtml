@@ -1,0 +1,34 @@
+@model Track
+@{ ViewData["Title"] = "Edit Track"; ViewData["ActiveNav"] = "Tracks"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="card" style="max-width:600px;">
+    <div class="flex-between mb-4"><a asp-controller="Admin" asp-action="Tracks" class="text-sm text-muted">← Tracks</a></div>
+    <h3 style="font-size:19px;">Edit Track</h3>
+    <form asp-controller="Admin" asp-action="EditTrack" asp-route-id="@Model.Id" method="post" class="mt-5">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <div class="field">
+            <label asp-for="InitiativeId">Initiative <span style="color:var(--destructive)">*</span></label>
+            <select asp-for="InitiativeId" asp-items="ViewBag.Initiatives" required>
+                <option value="">— Select initiative —</option>
+            </select>
+        </div>
+        <div class="field">
+            <label asp-for="Name">Track name <span style="color:var(--destructive)">*</span></label>
+            <input asp-for="Name" required />
+            <span asp-validation-for="Name" class="field-error"></span>
+        </div>
+        <div class="field">
+            <label asp-for="Type">Type</label>
+            <input asp-for="Type" />
+        </div>
+        <div class="field">
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" rows="3"></textarea>
+        </div>
+        <div class="flex gap-3 mt-5">
+            <button class="btn btn-primary" type="submit">Save changes</button>
+            <a asp-controller="Admin" asp-action="Tracks" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>

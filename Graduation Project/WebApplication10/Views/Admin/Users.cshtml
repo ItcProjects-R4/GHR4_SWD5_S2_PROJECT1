@@ -1,0 +1,29 @@
+@model IEnumerable<User>
+@{ ViewData["Title"] = "Users"; ViewData["ActiveNav"] = "Users"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="card">
+    <h3 style="font-size:17px;">Users (@Model.Count())</h3>
+    <table class="table mt-4">
+        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Tracks</th><th>Joined</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var u in Model)
+            {
+                var tc = u.Enrollments?
+                    .Where(e => e.Course != null)
+                    .Select(e => e.Course.TrackId)
+                    .Distinct().Count() ?? 0;
+                <tr>
+                    <td style="font-weight:500;">@u.Name</td>
+                    <td class="text-muted">@u.Email</td>
+                    <td><span class="badge">@u.Role</span></td>
+                    <td>@tc</td>
+                    <td class="text-muted" style="font-size:13px;">@u.CreatedAt.ToString("MMM d, yyyy")</td>
+                    <td>
+                        <a asp-controller="Users" asp-action="Details" asp-route-id="@u.Id"
+                           class="btn btn-ghost btn-sm">View</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

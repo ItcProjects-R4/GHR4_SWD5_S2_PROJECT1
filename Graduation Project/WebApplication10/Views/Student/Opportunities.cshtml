@@ -1,0 +1,52 @@
+@model IEnumerable<Opportunity>
+@{ ViewData["Title"] = "Opportunities"; ViewData["ActiveNav"] = "Opportunities"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="card">
+    <div class="flex-between gap-3" style="flex-wrap:wrap;">
+        <input id="oppSearch" placeholder="Search opportunities…" style="max-width:300px;" />
+        <div class="flex gap-2" id="oppFilter">
+            @foreach (var f in new[]{"All","Job","Internship","Event"})
+            {
+                <button class="btn @(f=="All"?"btn-primary":"btn-outline") btn-sm opp-filter-btn"
+                        onclick="setOppFilter('@f',this)">@f</button>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="oppList" class="grid grid-2 mt-6">
+    @foreach (var opp in Model)
+    {
+        var bc   = opp.Type == "Job"        ? "badge-primary"
+                 : opp.Type == "Internship" ? "badge-warm"
+                 : "badge-outline";
+        var tags = (opp.RequiredSkills ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+        <div class="card card-hover opp-card"
+             data-category="@opp.Type"
+             data-text="@($"{opp.Title} {opp.Source} {opp.RequiredSkills} {opp.Type}".ToLower())">
+            <div class="flex-between">
+                <span class="badge @bc">@opp.Type</span>
+                <span class="text-xs text-muted">@opp.CreatedAt.ToString("MMM d, yyyy")</span>
+            </div>
+            <h3 class="mt-3" style="font-size:17px;">@opp.Title</h3>
+            <div class="text-sm text-muted mt-1">@opp.Source</div>
+            <div class="flex gap-2 mt-3" style="flex-wrap:wrap;">
+                @foreach (var tag in tags)
+                {
+                    <span class="badge">@tag.Trim()</span>
+                }
+            </div>
+            @if (!string.IsNullOrEmpty(opp.Link))
+            {
+                <a href="@opp.Link" target="_blank" rel="noopener" class="btn btn-primary btn-sm mt-4">Apply →</a>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+<script>
+    initOppFilter();
+</script>
+}

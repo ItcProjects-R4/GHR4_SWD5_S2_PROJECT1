@@ -1,0 +1,34 @@
+@model IEnumerable<Opportunity>
+@{ ViewData["Title"] = "Opportunities"; ViewData["ActiveNav"] = "Opportunities"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="card">
+    <div class="flex-between">
+        <h3 style="font-size:17px;">Opportunities</h3>
+        <a asp-controller="Admin" asp-action="CreateOpportunity" class="btn btn-primary btn-sm">+ New</a>
+    </div>
+    <table class="table mt-4">
+        <thead><tr><th>Title</th><th>Type</th><th>Source</th><th>Skills</th><th>Added</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var o in Model)
+            {
+                var bc = o.Type == "Job" ? "badge-primary" : o.Type == "Internship" ? "badge-warm" : "badge-outline";
+                <tr>
+                    <td style="font-weight:500;">@o.Title</td>
+                    <td><span class="badge @bc">@o.Type</span></td>
+                    <td>@o.Source</td>
+                    <td class="text-muted" style="font-size:12px;">@o.RequiredSkills</td>
+                    <td class="text-muted" style="font-size:13px;">@o.CreatedAt.ToString("MMM d")</td>
+                    <td style="white-space:nowrap;">
+                        <a asp-controller="Admin" asp-action="EditOpportunity" asp-route-id="@o.Id" class="btn btn-ghost btn-sm">Edit</a>
+                        <form asp-controller="Admin" asp-action="DeleteOpportunity" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@o.Id" />
+                            <button type="submit" class="btn btn-ghost btn-sm" style="color:var(--destructive);"
+                                    onclick="return confirm('Delete this opportunity?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

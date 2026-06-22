@@ -1,0 +1,48 @@
+@model Course
+@{ ViewData["Title"] = "New Course"; ViewData["ActiveNav"] = "Courses"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="card" style="max-width:640px;">
+    <div class="flex-between mb-4"><a asp-controller="Admin" asp-action="Courses" class="text-sm text-muted">← Courses</a></div>
+    <h3 style="font-size:19px;">New Course</h3>
+    <form asp-controller="Admin" asp-action="CreateCourse" method="post" class="mt-5">
+        @Html.AntiForgeryToken()
+        <div class="field">
+            <label asp-for="TrackId">Track <span style="color:var(--destructive)">*</span></label>
+            <select asp-for="TrackId" asp-items="ViewBag.Tracks" required>
+                <option value="">— Select track —</option>
+            </select>
+            <span asp-validation-for="TrackId" class="field-error"></span>
+        </div>
+        <div class="field">
+            <label asp-for="Title">Title <span style="color:var(--destructive)">*</span></label>
+            <input asp-for="Title" required />
+            <span asp-validation-for="Title" class="field-error"></span>
+        </div>
+        <div class="field">
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" rows="3"></textarea>
+        </div>
+        <div class="field">
+            <label asp-for="ContentUrl">Content URL</label>
+            <input asp-for="ContentUrl" type="url" placeholder="https://…" />
+        </div>
+        <div class="grid grid-2">
+            <div class="field">
+                <label asp-for="Duration">Duration</label>
+                <input asp-for="Duration" placeholder="e.g. 4 weeks" />
+            </div>
+            <div class="field">
+                <label asp-for="SourceType">Source type</label>
+                <select asp-for="SourceType">
+                    <option value="">— Select —</option>
+                    <option>Video</option><option>Article</option><option>Tutorial</option>
+                    <option>Book</option><option>Contributed</option><option>Other</option>
+                </select>
+            </div>
+        </div>
+        <div class="flex gap-3 mt-5">
+            <button class="btn btn-primary" type="submit">Create</button>
+            <a asp-controller="Admin" asp-action="Courses" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>

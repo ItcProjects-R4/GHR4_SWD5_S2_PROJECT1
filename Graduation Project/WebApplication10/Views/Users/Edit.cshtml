@@ -1,0 +1,58 @@
+@model PathwayPlatform.Models.User
+@{
+    ViewData["Title"] = "Edit User";
+    Layout = "~/Views/Shared/_AppLayout.cshtml";
+    ViewData["ActiveNav"] = "Users";
+}
+
+<div class="flex-between mb-4">
+    <h2 class="section-title">Edit User</h2>
+    <a asp-controller="Users" asp-action="Index" class="btn btn-outline btn-sm">← Back to Users</a>
+</div>
+
+<div class="card" style="max-width:600px">
+    <div class="card-body">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CreatedAt" />
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" type="email" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Password" class="form-label">Password</label>
+                <input asp-for="Password" class="form-control" type="text" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+                <div class="text-muted small mt-1">Leave unchanged to keep existing password.</div>
+            </div>
+
+            <div class="form-group mb-4">
+                <label asp-for="Role" class="form-label">Role</label>
+                <select asp-for="Role" class="form-control"
+                        asp-items="Html.GetEnumSelectList<PathwayPlatform.Models.UserRole>()">
+                </select>
+                <span asp-validation-for="Role" class="text-danger small"></span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a asp-action="Index" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

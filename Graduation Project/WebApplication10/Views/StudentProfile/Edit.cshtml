@@ -1,0 +1,247 @@
+@model PathwayPlatform.Models.ViewModels.StudentProfileViewModel
+@{
+    ViewData["Title"]     = "Edit Profile";
+    ViewData["ActiveNav"] = "Profile";
+    Layout = "~/Views/Shared/_AppLayout.cshtml";
+}
+
+@section Styles {
+<style>
+    .avatar-preview {
+        width: 100px; height: 100px; border-radius: 50%;
+        object-fit: cover; border: 3px solid var(--primary);
+        background: var(--muted); cursor: pointer;
+    }
+    .upload-hint { font-size: 11px; color: var(--muted-foreground); margin-top: 4px; }
+    .section-title { font-size: 15px; font-weight: 700; color: var(--primary);
+                     padding-bottom: 8px; border-bottom: 1px solid var(--border);
+                     margin-bottom: 16px; }
+</style>
+}
+
+<div class="flex-between mb-4">
+    <a asp-controller="StudentProfile" asp-action="Index" class="text-sm text-muted">← Back to profile</a>
+</div>
+
+<form asp-controller="StudentProfile" asp-action="Edit" method="post"
+      enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="UserId" />
+    <input type="hidden" asp-for="Id" />
+
+    <div class="grid" style="grid-template-columns:260px 1fr;gap:24px;align-items:start;">
+
+        @* ── LEFT: Avatar + file uploads ──────────────────────────────────── *@
+        <div style="display:flex;flex-direction:column;gap:16px;">
+
+            <div class="card" style="text-align:center;padding:28px 20px;">
+                <div style="font-size:13px;font-weight:600;margin-bottom:12px;">Profile Photo</div>
+                <label for="ProfileImageFile" style="cursor:pointer;display:inline-block;">
+                    <img id="avatarPreview"
+                         src="@Model.SafeProfileImage"
+                         class="avatar-preview"
+                         title="Click to change photo"
+                         onerror="this.src='/images/default-avatar.png'" />
+                </label>
+                <input type="file" id="ProfileImageFile" name="ProfileImageFile"
+                       accept="image/jpeg,image/png,image/webp"
+                       style="display:none;"
+                       onchange="previewAvatar(this)" />
+                <div class="upload-hint">JPG, PNG or WEBP · max 5 MB<br/>Click photo to change</div>
+                <span asp-validation-for="ProfileImageFile" class="field-error"></span>
+            </div>
+
+            <div class="card" style="padding:20px;">
+                <div class="section-title">CV / Resume</div>
+                @if (!string.IsNullOrEmpty(Model.CVUrl))
+                {
+                    <div style="font-size:13px;margin-bottom:8px;">
+                        Current: <a href="@Model.CVUrl" target="_blank" style="color:var(--primary);">View CV</a>
+                    </div>
+                }
+                <label asp-for="CVFile" class="text-sm" style="font-weight:500;"></label>
+                <input type="file" asp-for="CVFile"
+                       accept="application/pdf"
+                       class="mt-2" style="font-size:13px;" />
+                <div class="upload-hint">PDF only · max 10 MB</div>
+                <span asp-validation-for="CVFile" class="field-error"></span>
+            </div>
+        </div>
+
+        @* ── RIGHT: All text fields ────────────────────────────────────────── *@
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+            @* Personal *@
+            <div class="card">
+                <div class="section-title">Personal Information</div>
+                <div class="grid grid-2">
+                    <div class="field">
+                        <label asp-for="FullName"></label>
+                        <input asp-for="FullName" placeholder="Your full name" />
+                        <span asp-validation-for="FullName" class="field-error"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="PhoneNumber"></label>
+                        <input asp-for="PhoneNumber" placeholder="+20 10 0000 0000" />
+                        <span asp-validation-for="PhoneNumber" class="field-error"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="DateOfBirth"></label>
+                        <input asp-for="DateOfBirth" type="date" />
+                        <span asp-validation-for="DateOfBirth" class="field-error"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Gender"></label>
+                        <select asp-for="Gender">
+                            <option value="">— Select —</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                        </select>
+                        <span asp-validation-for="Gender" class="field-error"></span>
+                    </div>
+                </div>
+                <div class="field">
+                    <label asp-for="Address"></label>
+                    <input asp-for="Address" placeholder="City, Country" />
+                    <span asp-validation-for="Address" class="field-error"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Bio"></label>
+                    <textarea asp-for="Bio" rows="4"
+                              placeholder="Tell others about yourself — your interests, goals, and what you're working on…"></textarea>
+                    <div class="upload-hint" id="bioCount"></div>
+                    <span asp-validation-for="Bio" class="field-error"></span>
+                </div>
+            </div>
+
+            @* Academic *@
+            <div class="card">
+                <div class="section-title">Academic Background</div>
+                <div class="grid grid-2">
+                    <div class="field">
+                        <label asp-for="University"></label>
+                        <input asp-for="University" placeholder="e.g. Cairo University" />
+                        <span asp-validation-for="University" class="field-error"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Faculty"></label>
+                        <input asp-for="Faculty" placeholder="e.g. Faculty of Computer Science" />
+                        <span asp-validation-for="Faculty" class="field-error"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="AcademicYear"></label>
+                        <select asp-for="AcademicYear">
+                            <option value="">— Select year —</option>
+                            <option>1st Year</option>
+                            <option>2nd Year</option>
+                            <option>3rd Year</option>
+                            <option>4th Year</option>
+                            <option>Graduate</option>
+                            <option>Postgraduate</option>
+                        </select>
+                        <span asp-validation-for="AcademicYear" class="field-error"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="GPA"></label>
+                        <input asp-for="GPA" type="number" step="0.01" min="0" max="4"
+                               placeholder="0.00 – 4.00" />
+                        <span asp-validation-for="GPA" class="field-error"></span>
+                    </div>
+                </div>
+            </div>
+
+            @* Skills *@
+            <div class="card">
+                <div class="section-title">Skills</div>
+                <div class="field">
+                    <label asp-for="Skills">Skills (comma-separated)</label>
+                    <input asp-for="Skills" id="skillsInput"
+                           placeholder="e.g. Python, ASP.NET Core, SQL, React" />
+                    <span asp-validation-for="Skills" class="field-error"></span>
+                </div>
+                @* Live skill tag preview *@
+                <div id="skillPreview" class="flex mt-2" style="flex-wrap:wrap;gap:6px;min-height:24px;"></div>
+            </div>
+
+            @* Links *@
+            <div class="card">
+                <div class="section-title">Social &amp; Portfolio Links</div>
+                <div class="field">
+                    <label asp-for="LinkedInUrl"></label>
+                    <input asp-for="LinkedInUrl" type="url"
+                           placeholder="https://linkedin.com/in/yourname" />
+                    <span asp-validation-for="LinkedInUrl" class="field-error"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="GithubUrl"></label>
+                    <input asp-for="GithubUrl" type="url"
+                           placeholder="https://github.com/yourname" />
+                    <span asp-validation-for="GithubUrl" class="field-error"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="PortfolioUrl"></label>
+                    <input asp-for="PortfolioUrl" type="url"
+                           placeholder="https://yourportfolio.dev" />
+                    <span asp-validation-for="PortfolioUrl" class="field-error"></span>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button class="btn btn-primary" type="submit">Save profile</button>
+                <a asp-controller="StudentProfile" asp-action="Index"
+                   class="btn btn-outline">Cancel</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+<script>
+    // Avatar live preview
+    function previewAvatar(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatarPreview').src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Bio character counter
+    var bioEl    = document.querySelector('textarea[name="Bio"]');
+    var bioCount = document.getElementById('bioCount');
+    if (bioEl && bioCount) {
+        function updateBioCount() {
+            bioCount.textContent = bioEl.value.length + ' / 1000 characters';
+        }
+        bioEl.addEventListener('input', updateBioCount);
+        updateBioCount();
+    }
+
+    // Skill tag live preview
+    var skillInput   = document.getElementById('skillsInput');
+    var skillPreview = document.getElementById('skillPreview');
+    if (skillInput && skillPreview) {
+        function renderSkills() {
+            var skills = skillInput.value.split(',')
+                .map(function(s) { return s.trim(); })
+                .filter(function(s) { return s.length > 0; });
+            skillPreview.innerHTML = skills.map(function(s) {
+                return '<span class="badge badge-outline" style="font-size:12px;padding:4px 10px;">' +
+                       escapeHtml(s) + '</span>';
+            }).join('');
+        }
+        skillInput.addEventListener('input', renderSkills);
+        renderSkills();
+    }
+
+    function escapeHtml(text) {
+        var d = document.createElement('div');
+        d.appendChild(document.createTextNode(text));
+        return d.innerHTML;
+    }
+</script>
+}

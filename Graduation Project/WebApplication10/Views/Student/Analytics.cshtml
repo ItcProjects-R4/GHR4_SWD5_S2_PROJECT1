@@ -1,0 +1,91 @@
+@model StudentAnalytics
+@{ ViewData["Title"] = "Analytics"; ViewData["ActiveNav"] = "Analytics"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+@if (Model == null)
+{
+    <div class="card">
+        <p class="text-muted">No analytics yet. Enroll in courses and make progress to see your stats.</p>
+        <a asp-controller="Student" asp-action="Initiatives" class="btn btn-primary mt-4">Browse initiatives</a>
+    </div>
+}
+else
+{
+    var rate       = (int)Model.CompletionRate;
+    var strengths  = (Model.StrengthAreas ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries);
+    var weaknesses = (Model.WeaknessAreas ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+    <div class="grid grid-3">
+        <div class="kpi">
+            <div class="label">Completion rate</div>
+            <div class="val">@rate%</div>
+            <div class="progress mt-2"><div style="width:@rate%"></div></div>
+        </div>
+        <div class="kpi">
+            <div class="label">Courses completed</div>
+            <div class="val">@Model.TotalCoursesCompleted</div>
+        </div>
+        <div class="kpi">
+            <div class="label">Last updated</div>
+            <div class="val" style="font-size:15px;margin-top:6px;">@Model.UpdatedAt.ToString("MMM d, yyyy")</div>
+        </div>
+    </div>
+
+    <div class="grid grid-2 mt-6">
+        <!-- Momentum chart -->
+        <div class="card">
+            <h3 style="font-size:17px;">Weekly momentum</h3>
+            <div class="bar-chart mt-4" id="barChart"></div>
+        </div>
+
+        <!-- Skill areas -->
+        <div class="card">
+            @if (strengths.Any())
+            {
+                <h3 style="font-size:17px;">Strongest areas</h3>
+                var max = strengths.Length;
+                for (int i = 0; i < strengths.Length; i++)
+                {
+                    var w = (int)((1.0 - (double)i / max) * 75) + 25;
+                    <div class="mt-3">
+                        <div class="flex-between text-sm"><span>@strengths[i].Trim()</span><span>@w%</span></div>
+                        <div class="progress mt-1"><div style="width:@w%"></div></div>
+                    </div>
+                }
+            }
+            else
+            {
+                <h3 style="font-size:17px;">Skill areas</h3>
+                <p class="text-sm text-muted mt-3">Complete courses to see your skill breakdown.</p>
+            }
+
+            @if (weaknesses.Any())
+            {
+                <h3 style="font-size:17px;margin-top:24px;">Areas to improve</h3>
+                var max2 = weaknesses.Length;
+                for (int i = 0; i < weaknesses.Length; i++)
+                {
+                    var w = (int)((1.0 - (double)i / max2) * 55) + 20;
+                    <div class="mt-3">
+                        <div class="flex-between text-sm"><span>@weaknesses[i].Trim()</span><span>@w%</span></div>
+                        <div class="progress mt-1"><div style="width:@w%;background:var(--gradient-warm);"></div></div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    @section Scripts {
+    <script>
+        var seed   = @Model.TotalCoursesCompleted + 1;
+        var weeks  = ['W1','W2','W3','W4','W5','W6','W7','W8'];
+        var values = weeks.map(function(_,i){ return Math.round(20 + Math.sin(i*0.7+seed)*15 + i*4); });
+        var max    = Math.max.apply(null, values) || 1;
+        var chart  = document.getElementById('barChart');
+        if (chart) {
+            chart.innerHTML = values.map(function(v,i){
+                return '<div class="bar" style="height:'+Math.round(v/max*100)+'%"><span>'+weeks[i]+'</span></div>';
+            }).join('');
+        }
+    </script>
+    }
+}

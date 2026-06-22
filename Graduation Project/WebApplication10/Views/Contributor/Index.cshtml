@@ -1,0 +1,39 @@
+@model ContributorDashboardViewModel
+@{ ViewData["Title"] = "Submissions"; ViewData["ActiveNav"] = "Submissions"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="grid grid-3">
+    <div class="kpi"><div class="label">Pending</div><div class="val">@Model.PendingCount</div></div>
+    <div class="kpi"><div class="label">Approved</div><div class="val">@Model.ApprovedCount</div></div>
+    <div class="kpi"><div class="label">Rejected</div><div class="val">@Model.RejectedCount</div></div>
+</div>
+
+<div class="card mt-6">
+    <div class="flex-between">
+        <h3 style="font-size:17px;">Your submissions</h3>
+        <a asp-controller="Contributor" asp-action="NewRequest" class="btn btn-primary btn-sm">+ New request</a>
+    </div>
+
+    @if (!Model.Requests.Any())
+    {
+        <p class="text-muted text-sm mt-4">No submissions yet. Click <strong>+ New request</strong> to get started.</p>
+    }
+    else
+    {
+        <table class="table mt-4">
+            <thead><tr><th>Course title</th><th>Track</th><th>Submitted</th><th>Status</th></tr></thead>
+            <tbody>
+                @foreach (var r in Model.Requests)
+                {
+                    var cls = r.Status == "approved" ? "badge-success"
+                            : r.Status == "rejected" ? "" : "badge-warm";
+                    <tr>
+                        <td>@r.Title</td>
+                        <td>@(r.Track?.Name ?? "—")</td>
+                        <td>@r.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td><span class="badge @cls">@r.Status</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

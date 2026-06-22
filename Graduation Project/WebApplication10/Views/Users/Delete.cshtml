@@ -1,0 +1,41 @@
+@model PathwayPlatform.Models.User
+@{
+    ViewData["Title"] = "Delete User";
+    Layout = "~/Views/Shared/_AppLayout.cshtml";
+    ViewData["ActiveNav"] = "Users";
+}
+
+<div class="flex-between mb-4">
+    <h2 class="section-title">Delete User</h2>
+    <a asp-controller="Users" asp-action="Index" class="btn btn-outline btn-sm">← Back to Users</a>
+</div>
+
+<div class="card border-danger" style="max-width:500px">
+    <div class="card-body">
+        <p class="text-danger fw-semibold">Are you sure you want to permanently delete this user?</p>
+
+        <dl class="row mb-4">
+            <dt class="col-sm-3">Name</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+
+            <dt class="col-sm-3">Role</dt>
+            <dd class="col-sm-9">@Model.Role</dd>
+
+            <dt class="col-sm-3">Joined</dt>
+            <dd class="col-sm-9">@Model.CreatedAt.ToString("MMM dd, yyyy")</dd>
+        </dl>
+
+        <div class="alert alert-warning small">
+            ⚠️ This will also delete all enrollments, progress records, and profile data associated with this user.
+        </div>
+
+        <form asp-action="Delete" method="post" class="d-flex gap-2 mt-3">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">Yes, Delete User</button>
+            <a asp-action="Index" class="btn btn-outline">Cancel</a>
+        </form>
+    </div>
+</div>

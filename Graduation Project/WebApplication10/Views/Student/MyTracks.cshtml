@@ -1,0 +1,27 @@
+@model IEnumerable<TrackCard>
+@{ ViewData["Title"] = "My Tracks"; ViewData["ActiveNav"] = "MyTracks"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+@if (!Model.Any())
+{
+    <div class="card">
+        <p class="text-muted">You haven't joined any tracks yet.</p>
+        <a asp-controller="Student" asp-action="Initiatives" class="btn btn-primary mt-4">Browse initiatives</a>
+    </div>
+}
+else
+{
+    <div class="grid grid-2">
+        @foreach (var tc in Model)
+        {
+            <div class="card card-hover">
+                <div class="text-xs text-muted">@(tc.Track.Initiative?.Name ?? "")</div>
+                <h3 class="mt-2" style="font-size:18px;">@tc.Track.Name</h3>
+                <div class="text-xs text-muted mt-1">@tc.CoursesCount courses</div>
+                <div class="progress mt-3"><div style="width:@tc.ProgressPercent%"></div></div>
+                <div class="text-xs text-muted mt-1">@tc.ProgressPercent% complete</div>
+                <a asp-controller="Student" asp-action="TrackCourses" asp-route-trackId="@tc.Track.Id"
+                   class="btn btn-primary btn-sm mt-4">Open courses →</a>
+            </div>
+        }
+    </div>
+}

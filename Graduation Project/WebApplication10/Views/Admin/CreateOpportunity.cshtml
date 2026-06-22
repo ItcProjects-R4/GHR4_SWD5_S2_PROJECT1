@@ -1,0 +1,44 @@
+@model Opportunity
+@{ ViewData["Title"] = "New Opportunity"; ViewData["ActiveNav"] = "Opportunities"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="card" style="max-width:640px;">
+    <div class="flex-between mb-4"><a asp-controller="Admin" asp-action="Opportunities" class="text-sm text-muted">← Opportunities</a></div>
+    <h3 style="font-size:19px;">New Opportunity</h3>
+    <form asp-controller="Admin" asp-action="CreateOpportunity" method="post" class="mt-5">
+        @Html.AntiForgeryToken()
+        <div class="field">
+            <label asp-for="Title">Title <span style="color:var(--destructive)">*</span></label>
+            <input asp-for="Title" required />
+            <span asp-validation-for="Title" class="field-error"></span>
+        </div>
+        <div class="grid grid-2">
+            <div class="field">
+                <label asp-for="Type">Type</label>
+                <select asp-for="Type">
+                    <option value="">— Select —</option>
+                    <option>Job</option><option>Internship</option><option>Event</option>
+                </select>
+            </div>
+            <div class="field">
+                <label asp-for="Source">Source</label>
+                <input asp-for="Source" placeholder="e.g. LinkedIn, Wuzzuf" />
+            </div>
+        </div>
+        <div class="field">
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" rows="3"></textarea>
+        </div>
+        <div class="field">
+            <label asp-for="RequiredSkills">Required skills (comma-separated)</label>
+            <input asp-for="RequiredSkills" placeholder="Python, SQL, Communication" />
+        </div>
+        <div class="field">
+            <label asp-for="Link">Application link</label>
+            <input asp-for="Link" type="url" placeholder="https://…" />
+        </div>
+        <div class="flex gap-3 mt-5">
+            <button class="btn btn-primary" type="submit">Create</button>
+            <a asp-controller="Admin" asp-action="Opportunities" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>

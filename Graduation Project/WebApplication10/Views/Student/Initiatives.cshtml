@@ -1,0 +1,18 @@
+@model IEnumerable<Initiative>
+@{ ViewData["Title"] = "Initiatives"; ViewData["ActiveNav"] = "Initiatives"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="grid grid-3">
+    @foreach (var i in Model)
+    {
+        <div class="card card-hover">
+            <span class="badge">Initiative</span>
+            <h3 class="mt-4" style="font-size:19px;">@i.Name</h3>
+            <p class="text-sm text-muted mt-2">@i.Description</p>
+            <div class="flex-between mt-4">
+                <span class="text-xs text-muted">@(i.Tracks?.Count ?? 0) tracks</span>
+                <a asp-controller="Student" asp-action="InitiativeDetail" asp-route-id="@i.Id"
+                   class="btn btn-primary btn-sm">Explore →</a>
+            </div>
+        </div>
+    }
+</div>

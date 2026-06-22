@@ -1,0 +1,43 @@
+@model PathwayPlatform.Models.User
+@{ ViewData["Title"] = "Register as Contributor"; }
+
+<div class="auth-wrap">
+    <div class="auth-card card">
+        <div class="flex-between mb-4">
+            <a asp-controller="Users" asp-action="Register" class="text-sm text-muted">← Back</a>
+            <span class="badge badge-warm">Contributor account</span>
+        </div>
+        <h1 style="font-size:24px;">Join as a Contributor</h1>
+        <p class="text-muted text-sm mt-2">Submit courses for admin review and reach learners.</p>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert-error mt-4">@ViewBag.Error</div>
+        }
+
+        <form asp-controller="Users" asp-action="RegisterContributor" method="post" class="mt-5">
+            @Html.AntiForgeryToken()
+            <div class="field">
+                <label asp-for="Name">Organization / Instructor name</label>
+                <input asp-for="Name" placeholder="DevPro Training" required />
+                <span asp-validation-for="Name" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Email">Email</label>
+                <input asp-for="Email" type="email" placeholder="contact@org.com" required />
+                <span asp-validation-for="Email" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Password">Password</label>
+                <input asp-for="Password" type="password" placeholder="At least 6 characters" required minlength="6" />
+                <span asp-validation-for="Password" class="field-error"></span>
+            </div>
+            <button class="btn btn-warm mt-5" style="width:100%;" type="submit">Create contributor account</button>
+        </form>
+
+        <p class="text-sm text-muted mt-4" style="text-align:center;">
+            Already have an account?
+            <a asp-controller="Users" asp-action="Login" style="color:var(--primary);font-weight:500;">Sign in</a>
+        </p>
+    </div>
+</div>

@@ -1,0 +1,164 @@
+@model PathwayPlatform.Models.ViewModels.StudentProfileViewModel
+@{
+    ViewData["Title"]     = "My Profile";
+    ViewData["ActiveNav"] = "Profile";
+    Layout = "~/Views/Shared/_AppLayout.cshtml";
+    bool isOwner = ViewBag.IsOwner == true;
+}
+
+<div class="grid" style="grid-template-columns:300px 1fr;gap:24px;align-items:start;">
+
+    @* ── LEFT COLUMN: Profile card ─────────────────────────────────────────── *@
+    <div>
+        <div class="card" style="text-align:center;padding:32px 24px;">
+
+            @* Avatar *@
+            <div style="position:relative;display:inline-block;margin-bottom:16px;">
+                <img src="@Model.SafeProfileImage"
+                     alt="@Model.UserName"
+                     style="width:100px;height:100px;border-radius:50%;object-fit:cover;
+                            border:3px solid var(--primary);background:var(--muted);"
+                     onerror="this.src='/images/default-avatar.png'" />
+                @if (isOwner)
+                {
+                    <a asp-controller="StudentProfile" asp-action="Edit"
+                       style="position:absolute;bottom:0;right:0;width:28px;height:28px;
+                              border-radius:50%;background:var(--primary);color:white;
+                              display:flex;align-items:center;justify-content:center;
+                              font-size:14px;text-decoration:none;">✎</a>
+                }
+            </div>
+
+            <div style="font-size:18px;font-weight:700;">@(Model.FullName ?? Model.UserName)</div>
+            <div class="text-sm text-muted mt-1">@Model.UserEmail</div>
+
+            @if (!string.IsNullOrEmpty(Model.AcademicYear))
+            {
+                <div class="badge mt-3">@Model.AcademicYear</div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.University))
+            {
+                <div class="text-sm text-muted mt-3">🎓 @Model.University</div>
+            }
+            @if (!string.IsNullOrEmpty(Model.Faculty))
+            {
+                <div class="text-sm text-muted">📖 @Model.Faculty</div>
+            }
+            @if (Model.GPA.HasValue)
+            {
+                <div class="text-sm text-muted mt-1">GPA: <strong>@Model.GPA.Value.ToString("0.0")</strong> / 4.0</div>
+            }
+            @if (!string.IsNullOrEmpty(Model.PhoneNumber))
+            {
+                <div class="text-sm text-muted mt-1">📞 @Model.PhoneNumber</div>
+            }
+
+            @* Social links *@
+            <div class="flex-center mt-4" style="justify-content:center;gap:12px;">
+                @if (!string.IsNullOrEmpty(Model.LinkedInUrl))
+                {
+                    <a href="@Model.LinkedInUrl" target="_blank" title="LinkedIn"
+                       style="color:var(--primary);font-size:20px;">in</a>
+                }
+                @if (!string.IsNullOrEmpty(Model.GithubUrl))
+                {
+                    <a href="@Model.GithubUrl" target="_blank" title="GitHub"
+                       style="color:var(--foreground);font-size:18px;">⌥</a>
+                }
+                @if (!string.IsNullOrEmpty(Model.PortfolioUrl))
+                {
+                    <a href="@Model.PortfolioUrl" target="_blank" title="Portfolio"
+                       style="color:var(--primary);">🌐</a>
+                }
+            </div>
+
+            @* CV download *@
+            @if (!string.IsNullOrEmpty(Model.CVUrl))
+            {
+                <a href="@Model.CVUrl" target="_blank"
+                   class="btn btn-outline btn-sm mt-4" style="width:100%;">
+                    📄 Download CV
+                </a>
+            }
+
+            @if (isOwner)
+            {
+                <a asp-controller="StudentProfile" asp-action="Edit"
+                   class="btn btn-primary btn-sm mt-3" style="width:100%;">Edit Profile</a>
+            }
+        </div>
+    </div>
+
+    @* ── RIGHT COLUMN: Details ──────────────────────────────────────────────── *@
+    <div style="display:flex;flex-direction:column;gap:20px;">
+
+        @* Bio *@
+        @if (!string.IsNullOrEmpty(Model.Bio))
+        {
+            <div class="card">
+                <h3 style="font-size:16px;font-weight:600;margin-bottom:10px;">About</h3>
+                <p class="text-sm" style="line-height:1.7;white-space:pre-wrap;">@Model.Bio</p>
+            </div>
+        }
+
+        @* Skills *@
+        @if (Model.SkillList.Any())
+        {
+            <div class="card">
+                <h3 style="font-size:16px;font-weight:600;margin-bottom:12px;">Skills</h3>
+                <div class="flex" style="flex-wrap:wrap;gap:8px;">
+                    @foreach (var skill in Model.SkillList)
+                    {
+                        <span class="badge badge-outline" style="font-size:13px;padding:5px 12px;">@skill</span>
+                    }
+                </div>
+            </div>
+        }
+
+        @* Personal info *@
+        @{
+            bool hasPersonal = Model.DateOfBirth.HasValue || !string.IsNullOrEmpty(Model.Gender) || !string.IsNullOrEmpty(Model.Address);
+        }
+        @if (hasPersonal)
+        {
+            <div class="card">
+                <h3 style="font-size:16px;font-weight:600;margin-bottom:12px;">Personal Info</h3>
+                <table style="width:100%;font-size:14px;border-collapse:collapse;">
+                    @if (Model.DateOfBirth.HasValue)
+                    {
+                        <tr>
+                            <td style="padding:6px 0;color:var(--muted-foreground);width:140px;">Date of Birth</td>
+                            <td style="padding:6px 0;font-weight:500;">@Model.DateOfBirth.Value.ToString("MMMM d, yyyy")</td>
+                        </tr>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Gender))
+                    {
+                        <tr>
+                            <td style="padding:6px 0;color:var(--muted-foreground);">Gender</td>
+                            <td style="padding:6px 0;font-weight:500;">@Model.Gender</td>
+                        </tr>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Address))
+                    {
+                        <tr>
+                            <td style="padding:6px 0;color:var(--muted-foreground);">Address</td>
+                            <td style="padding:6px 0;font-weight:500;">@Model.Address</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        }
+
+        @* Empty state *@
+        @if (isOwner && string.IsNullOrEmpty(Model.Bio) && !Model.SkillList.Any() && !hasPersonal)
+        {
+            <div class="card" style="text-align:center;padding:40px;">
+                <div style="font-size:48px;margin-bottom:16px;">👤</div>
+                <p class="text-muted">Your profile is empty. Fill it in so others can learn about you!</p>
+                <a asp-controller="StudentProfile" asp-action="Edit"
+                   class="btn btn-primary mt-4">Complete your profile</a>
+            </div>
+        }
+    </div>
+</div>

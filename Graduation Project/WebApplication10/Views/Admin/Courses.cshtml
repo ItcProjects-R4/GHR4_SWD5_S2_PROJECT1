@@ -1,0 +1,28 @@
+@model IEnumerable<Course>
+@{ ViewData["Title"] = "Courses"; ViewData["ActiveNav"] = "Courses"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="card">
+    <div class="flex-between">
+        <h3 style="font-size:17px;">Courses</h3>
+        <a asp-controller="Admin" asp-action="CreateCourse" class="btn btn-primary btn-sm">+ New</a>
+    </div>
+    <table class="table mt-4">
+        <thead><tr><th>Title</th><th>Track</th><th>Initiative</th><th>Duration</th><th>Source</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td style="font-weight:500;">@c.Title</td>
+                    <td>@(c.Track?.Name ?? "—")</td>
+                    <td class="text-muted" style="font-size:13px;">@(c.Track?.Initiative?.Name ?? "—")</td>
+                    <td>@(c.Duration ?? "—")</td>
+                    <td>@(c.SourceType ?? "—")</td>
+                    <td style="white-space:nowrap;">
+                        <a asp-controller="Admin" asp-action="EditCourse"   asp-route-id="@c.Id" class="btn btn-ghost btn-sm">Edit</a>
+                        <a asp-controller="Admin" asp-action="DeleteCourse" asp-route-id="@c.Id" class="btn btn-ghost btn-sm" style="color:var(--destructive);">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

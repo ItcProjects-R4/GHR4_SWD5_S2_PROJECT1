@@ -1,0 +1,26 @@
+@model IEnumerable<Initiative>
+@{ ViewData["Title"] = "Initiatives"; ViewData["ActiveNav"] = "Initiatives"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="card">
+    <div class="flex-between">
+        <h3 style="font-size:17px;">Initiatives</h3>
+        <a asp-controller="Admin" asp-action="CreateInitiative" class="btn btn-primary btn-sm">+ New</a>
+    </div>
+    <table class="table mt-4">
+        <thead><tr><th>Name</th><th>Description</th><th>Tracks</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td style="font-weight:500;">@i.Name</td>
+                    <td class="text-muted" style="font-size:13px;max-width:300px;">@i.Description</td>
+                    <td>@(i.Tracks?.Count ?? 0)</td>
+                    <td style="white-space:nowrap;">
+                        <a asp-controller="Admin" asp-action="EditInitiative" asp-route-id="@i.Id" class="btn btn-ghost btn-sm">Edit</a>
+                        <a asp-controller="Admin" asp-action="DeleteInitiative" asp-route-id="@i.Id" class="btn btn-ghost btn-sm" style="color:var(--destructive);">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

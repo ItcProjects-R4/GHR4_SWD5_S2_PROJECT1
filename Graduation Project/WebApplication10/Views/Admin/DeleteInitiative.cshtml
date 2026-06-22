@@ -1,0 +1,14 @@
+@model Initiative
+@{ ViewData["Title"] = "Delete Initiative"; ViewData["ActiveNav"] = "Initiatives"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="card" style="max-width:520px;">
+    <h3 style="font-size:19px;color:var(--destructive);">Delete Initiative</h3>
+    <p class="text-muted mt-3">Are you sure you want to delete <strong>@Model.Name</strong>? All associated tracks and courses will also be deleted.</p>
+    <form asp-controller="Admin" asp-action="DeleteInitiative" asp-route-id="@Model.Id" method="post" class="mt-5">
+        @Html.AntiForgeryToken()
+        <div class="flex gap-3">
+            <button class="btn btn-sm" style="background:var(--destructive);color:white;" type="submit">Yes, delete</button>
+            <a asp-controller="Admin" asp-action="Initiatives" class="btn btn-outline btn-sm">Cancel</a>
+        </div>
+    </form>
+</div>

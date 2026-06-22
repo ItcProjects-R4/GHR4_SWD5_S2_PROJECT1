@@ -1,0 +1,14 @@
+@model Course
+@{ ViewData["Title"] = "Delete Course"; ViewData["ActiveNav"] = "Courses"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="card" style="max-width:520px;">
+    <h3 style="font-size:19px;color:var(--destructive);">Delete Course</h3>
+    <p class="text-muted mt-3">Delete <strong>@Model.Title</strong> from track <strong>@(Model.Track?.Name ?? "—")</strong>? This will also remove all student enrollments for this course.</p>
+    <form asp-controller="Admin" asp-action="DeleteCourse" asp-route-id="@Model.Id" method="post" class="mt-5">
+        @Html.AntiForgeryToken()
+        <div class="flex gap-3">
+            <button class="btn btn-sm" style="background:var(--destructive);color:white;" type="submit">Yes, delete</button>
+            <a asp-controller="Admin" asp-action="Courses" class="btn btn-outline btn-sm">Cancel</a>
+        </div>
+    </form>
+</div>

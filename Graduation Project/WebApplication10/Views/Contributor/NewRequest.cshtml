@@ -1,0 +1,55 @@
+@model CourseRequest
+@{ ViewData["Title"] = "New Course Request"; ViewData["ActiveNav"] = "NewRequest"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+@{
+    var tracks = ViewBag.Tracks as IEnumerable<Track> ?? Enumerable.Empty<Track>();
+}
+
+<div class="card" style="max-width:680px;">
+    <h3 style="font-size:19px;">Submit a course request</h3>
+    <p class="text-sm text-muted mt-2">Admins review each submission before publishing it to the platform.</p>
+
+    <form asp-controller="Contributor" asp-action="NewRequest" method="post" class="mt-5">
+        @Html.AntiForgeryToken()
+
+        <div class="field">
+            <label asp-for="Title">Course title <span style="color:var(--destructive)">*</span></label>
+            <input asp-for="Title" required placeholder="e.g. Advanced React Patterns" />
+            <span asp-validation-for="Title" class="field-error"></span>
+        </div>
+
+        <div class="field">
+            <label asp-for="Description">Description <span style="color:var(--destructive)">*</span></label>
+            <textarea asp-for="Description" rows="4" required placeholder="Describe what students will learn…"></textarea>
+            <span asp-validation-for="Description" class="field-error"></span>
+        </div>
+
+        <div class="field">
+            <label asp-for="ContentUrl">Content URL <span style="color:var(--destructive)">*</span></label>
+            <input asp-for="ContentUrl" type="url" placeholder="https://…" required />
+            <span asp-validation-for="ContentUrl" class="field-error"></span>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="field">
+                <label asp-for="Duration">Duration</label>
+                <input asp-for="Duration" placeholder="e.g. 6 weeks" />
+            </div>
+            <div class="field">
+                <label asp-for="TrackId">Suggested track</label>
+                <select asp-for="TrackId">
+                    <option value="">— Let admin classify —</option>
+                    @foreach (var t in tracks)
+                    {
+                        <option value="@t.Id">@(t.Initiative?.Name != null ? t.Initiative.Name + " · " : "")@t.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="flex gap-3 mt-5">
+            <button class="btn btn-primary" type="submit">Submit for review</button>
+            <a asp-controller="Contributor" asp-action="Index" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>

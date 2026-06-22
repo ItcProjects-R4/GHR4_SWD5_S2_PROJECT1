@@ -1,0 +1,43 @@
+@* _ProfileCard.cshtml
+   Reusable partial — render with:
+     @await Html.PartialAsync("_ProfileCard", profile)
+   or
+     <partial name="_ProfileCard" model="profile" />
+
+   model: StudentProfile? (nullable — shows empty state if null)
+*@
+@model PathwayPlatform.Models.StudentProfile?
+
+@{
+    var imgSrc   = (Model?.ProfileImageUrl is { Length: > 0 } img) ? img : "/images/default-avatar.png";
+    var fullName = Model?.FullName ?? Context.Session.GetString("UserName") ?? "Student";
+    var email    = Context.Session.GetString("UserEmail") ?? "";
+    var uni      = Model?.University;
+    var year     = Model?.AcademicYear ?? Model?.Level;
+}
+
+<div style="padding:12px;border-bottom:1px solid var(--border);margin-bottom:8px;">
+    <div class="flex-center gap-3">
+        <img src="@imgSrc"
+             alt="@fullName"
+             style="width:40px;height:40px;border-radius:50%;object-fit:cover;
+                    border:2px solid var(--primary);flex-shrink:0;background:var(--muted);"
+             onerror="this.src='/images/default-avatar.png'" />
+        <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;white-space:nowrap;
+                        overflow:hidden;text-overflow:ellipsis;">@fullName</div>
+            <div style="font-size:11px;color:var(--muted-foreground);white-space:nowrap;
+                        overflow:hidden;text-overflow:ellipsis;">@email</div>
+            @if (!string.IsNullOrEmpty(uni) || !string.IsNullOrEmpty(year))
+            {
+                <div style="font-size:10px;color:var(--muted-foreground);margin-top:2px;">
+                    @(year != null ? year + " · " : "")@uni
+                </div>
+            }
+        </div>
+    </div>
+    <a asp-controller="StudentProfile" asp-action="Index"
+       class="btn btn-outline btn-sm mt-3" style="width:100%;font-size:12px;">
+        👤 View Profile
+    </a>
+</div>

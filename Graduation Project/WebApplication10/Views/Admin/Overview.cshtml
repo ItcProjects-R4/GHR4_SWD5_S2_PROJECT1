@@ -1,0 +1,39 @@
+@model AdminOverviewViewModel
+@{ ViewData["Title"] = "Admin Overview"; ViewData["ActiveNav"] = "Overview"; Layout = "~/Views/Shared/_AppLayout.cshtml"; }
+
+<div class="grid grid-3">
+    <div class="kpi"><div class="label">Initiatives</div><div class="val">@Model.InitiativesCount</div></div>
+    <div class="kpi"><div class="label">Tracks</div><div class="val">@Model.TracksCount</div></div>
+    <div class="kpi"><div class="label">Courses</div><div class="val">@Model.CoursesCount</div></div>
+    <div class="kpi"><div class="label">Users</div><div class="val">@Model.UsersCount</div></div>
+    <div class="kpi"><div class="label">Opportunities</div><div class="val">@Model.OpportunitiesCount</div></div>
+    <div class="kpi">
+        <div class="label">Pending requests</div>
+        <div class="val" style="color:var(--primary);">@Model.PendingRequestsCount</div>
+    </div>
+</div>
+
+<div class="grid grid-2 mt-6">
+    <div class="card">
+        <h3 style="font-size:17px;">Quick actions</h3>
+        <div class="flex gap-2 mt-4" style="flex-wrap:wrap;">
+            <a asp-controller="Admin" asp-action="CreateInitiative"  class="btn btn-outline btn-sm">+ Initiative</a>
+            <a asp-controller="Admin" asp-action="CreateTrack"       class="btn btn-outline btn-sm">+ Track</a>
+            <a asp-controller="Admin" asp-action="CreateCourse"      class="btn btn-outline btn-sm">+ Course</a>
+            <a asp-controller="Admin" asp-action="CreateOpportunity" class="btn btn-outline btn-sm">+ Opportunity</a>
+        </div>
+        <div class="mt-4">
+            <a asp-controller="Admin" asp-action="Requests" class="btn btn-primary btn-sm">
+                Review requests (@Model.PendingRequestsCount pending)
+            </a>
+        </div>
+    </div>
+    <div class="card">
+        <h3 style="font-size:17px;">Platform health</h3>
+        <p class="text-sm text-muted mt-3">All systems nominal.</p>
+        <div class="grid grid-2 mt-4">
+            <div><div class="text-xs text-muted">Users</div><div style="font-size:22px;font-weight:700;">@Model.UsersCount</div></div>
+            <div><div class="text-xs text-muted">Live opportunities</div><div style="font-size:22px;font-weight:700;">@Model.OpportunitiesCount</div></div>
+        </div>
+    </div>
+</div>

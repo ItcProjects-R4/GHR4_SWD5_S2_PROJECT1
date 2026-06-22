@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] — Pathway</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/pathway.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+@{
+    var userRole  = Context.Session.GetString("UserRole")  ?? "";
+    var userName  = Context.Session.GetString("UserName")  ?? "User";
+    var userEmail = Context.Session.GetString("UserEmail") ?? "";
+    var activeNav = ViewData["ActiveNav"]?.ToString()      ?? "";
+    var pageTitle = ViewData["Title"]?.ToString()          ?? "Pathway";
+
+    // SidebarProfile injected by Program.cs middleware for student role
+    var sidebarProfile = Context.Items["SidebarProfile"]
+                         as PathwayPlatform.Models.StudentProfile;
+}
+
+<div class="app-shell">
+
+    <!-- ══════════════ SIDEBAR ══════════════ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <div class="brand-mark">P</div>
+            <span>Pathway</span>
+        </div>
+
+        @if (userRole == "Admin")
+        {
+            <div class="nav-section">Admin</div>
+            <a class="nav-link @(activeNav=="Overview"?"active":"")"      asp-controller="Admin" asp-action="Overview">     <span class="icon">🏠</span><span>Overview</span></a>
+            <a class="nav-link @(activeNav=="Initiatives"?"active":"")"   asp-controller="Admin" asp-action="Initiatives">  <span class="icon">🎓</span><span>Initiatives</span></a>
+            <a class="nav-link @(activeNav=="Tracks"?"active":"")"        asp-controller="Admin" asp-action="Tracks">       <span class="icon">🛤️</span><span>Tracks</span></a>
+            <a class="nav-link @(activeNav=="Courses"?"active":"")"       asp-controller="Admin" asp-action="Courses">      <span class="icon">📚</span><span>Courses</span></a>
+            <a class="nav-link @(activeNav=="Requests"?"active":"")"      asp-controller="Admin" asp-action="Requests">     <span class="icon">📥</span><span>Requests</span></a>
+            <a class="nav-link @(activeNav=="Opportunities"?"active":"")" asp-controller="Admin" asp-action="Opportunities"><span class="icon">💼</span><span>Opportunities</span></a>
+            <a class="nav-link @(activeNav=="Users"?"active":"")"         asp-controller="Admin" asp-action="Users">        <span class="icon">👥</span><span>Users</span></a>
+        }
+        else if (userRole == "Contributor")
+        {
+            <div class="nav-section">Contributor</div>
+            <a class="nav-link @(activeNav=="Submissions"?"active":"")"   asp-controller="Contributor" asp-action="Index">         <span class="icon">📋</span><span>Submissions</span></a>
+            <a class="nav-link @(activeNav=="NewRequest"?"active":"")"    asp-controller="Contributor" asp-action="NewRequest">     <span class="icon">➕</span><span>New Request</span></a>
+            <a class="nav-link @(activeNav=="Opportunities"?"active":"")" asp-controller="Contributor" asp-action="Opportunities">  <span class="icon">💼</span><span>Opportunities</span></a>
+        }
+        else
+        {
+            <div class="nav-section">Student</div>
+            <a class="nav-link @(activeNav=="Dashboard"?"active":"")"     asp-controller="Student" asp-action="Dashboard">    <span class="icon">🏠</span><span>Dashboard</span></a>
+            <a class="nav-link @(activeNav=="Initiatives"?"active":"")"   asp-controller="Student" asp-action="Initiatives">  <span class="icon">🎓</span><span>Initiatives</span></a>
+            <a class="nav-link @(activeNav=="MyTracks"?"active":"")"      asp-controller="Student" asp-action="MyTracks">     <span class="icon">🛤️</span><span>My Tracks</span></a>
+            <a class="nav-link @(activeNav=="Courses"?"active":"")"       asp-controller="Student" asp-action="MyCourses">   <span class="icon">📚</span><span>Courses</span></a>
+            <a class="nav-link @(activeNav=="Analytics"?"active":"")"     asp-controller="Student" asp-action="Analytics">   <span class="icon">📊</span><span>Analytics</span></a>
+            <a class="nav-link @(activeNav=="Opportunities"?"active":"")" asp-controller="Student" asp-action="Opportunities"><span class="icon">💼</span><span>Opportunities</span></a>
+            <a class="nav-link @(activeNav=="Profile"?"active":"")"       asp-controller="StudentProfile" asp-action="Index"><span class="icon">👤</span><span>My Profile</span></a>
+        }
+
+        <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border);">
+            @if (userRole == "Student")
+            {
+                @* Profile card shown at the bottom of the student sidebar *@
+                @await Html.PartialAsync("_ProfileCard", sidebarProfile)
+            }
+            else
+            {
+                <div style="padding:10px 12px;font-size:13px;">
+                    <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@userName</div>
+                    <div style="color:var(--muted-foreground);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@userEmail</div>
+                </div>
+            }
+            <a class="nav-link" asp-controller="Users" asp-action="Logout"><span class="icon">↩</span><span>Sign out</span></a>
+        </div>
+    </aside>
+
+    <!-- ══════════════ MAIN ══════════════ -->
+    <div class="main">
+        <div class="topbar">
+            <div class="flex-center gap-3">
+                <button class="btn btn-ghost btn-sm" id="menuBtn" style="font-size:18px;">☰</button>
+                <h2 style="font-size:17px;font-weight:600;">@pageTitle</h2>
+            </div>
+            <div class="flex-center gap-3">
+                <button class="btn btn-ghost btn-sm" id="themeBtn" title="Toggle theme">🌓</button>
+                <span class="badge badge-outline">@userRole</span>
+            </div>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="flash flash-success">✓ @TempData["Success"]</div>
+        }
+        @if (TempData["Info"] != null)
+        {
+            <div class="flash flash-info">ℹ @TempData["Info"]</div>
+        }
+
+        <div class="content">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+<script src="~/js/pathway.js" asp-append-version="true"></script>
+@RenderSection("Scripts", required: false)
+</body>
+</html>

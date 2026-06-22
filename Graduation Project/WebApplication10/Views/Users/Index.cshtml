@@ -1,0 +1,40 @@
+@model IEnumerable<PathwayPlatform.Models.User>
+@{
+    ViewData["Title"] = "Manage Users";
+    ViewData["ActiveNav"] = "Users";
+    Layout = "~/Views/Shared/_AppLayout.cshtml";
+}
+
+<div class="flex-between mb-4">
+    <h2 class="section-title">Users (@Model.Count())</h2>
+</div>
+
+<div class="card">
+    <table class="table mt-2">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Joined</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model)
+            {
+                <tr>
+                    <td>@u.Name</td>
+                    <td>@u.Email</td>
+                    <td><span class="badge badge-@u.Role.ToString().ToLower()">@u.Role</span></td>
+                    <td>@u.CreatedAt.ToString("MMM dd, yyyy")</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@u.Id" class="btn btn-outline btn-sm">View</a>
+                        <a asp-action="Edit"    asp-route-id="@u.Id" class="btn btn-outline btn-sm">Edit</a>
+                        <a asp-action="Delete"  asp-route-id="@u.Id" class="btn btn-sm" style="color:var(--danger)">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

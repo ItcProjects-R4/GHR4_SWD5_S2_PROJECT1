@@ -1,0 +1,12 @@
+@model PathwayPlatform.Models.ErrorViewModel
+@{ ViewData["Title"] = "Error"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<div style="max-width:480px;margin:80px auto;text-align:center;">
+    <h1 style="font-size:48px;">⚠️</h1>
+    <h2>Something went wrong.</h2>
+    @if (Model.ShowRequestId)
+    {
+        <p class="text-sm text-muted">Request ID: <code>@Model.RequestId</code></p>
+    }
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-6">Go home</a>
+</div>
