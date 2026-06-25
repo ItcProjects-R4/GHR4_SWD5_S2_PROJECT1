@@ -4,21 +4,24 @@
 
 ---
 
-## 📖 Project Idea
+# 📖 Project Idea
 
-**Pathway** is an end-to-end digital ecosystem that tracks a student's full journey — from the moment they're enrolled into a technical **Track** under a training **Initiative**, through every attended session, all the way to being matched with a real job or internship **Opportunity** from a corporate partner.
+**Pathway** is a centralized digital platform that brings together all training **Initiatives** in one ecosystem. It enables students to discover, enroll in, and manage different learning opportunities through a single account, eliminating the need for scattered systems and manual processes.
 
-Instead of scattered spreadsheets and manual grading, Pathway gives training academies one live, centralized system: instructors log performance data, the platform avaliables each student's standing, and qualified students are surfaced to recruiters — turning training outcomes into hiring outcomes.
+The platform empowers students to evaluate their own technical and soft skills through a structured **Self-Assessment** system. Based on their assessments and learning progress, Pathway generates personalized analytics and insights that help students understand their strengths, identify areas for improvement, and track their development over time.
+
+For initiative managers and administrators, Pathway provides a unified dashboard to monitor participation, student engagement, assessment results, and overall initiative performance. By centralizing data and providing real-time analytics, the platform helps organizations make better decisions while improving the learning experience for every student.
 
 Built for **Ministry of Communications** by team **GHR4 — SWD5 — S2 — Project 1**.
 
-## 🎯 Project Objectives
+# 🎯 Project Objectives
 
-- **Eliminate progress fragmentation** — replace scattered spreadsheets and manual grading with one unified, real-time dashboard.
-- **Self Progress-Based Scoring** — students earn points by completing course sections and milestones, allowing them to track their progress and gradually increase their overall score.
-- **Opportunity matching** — Contributor post job/internship Opportunities; the system surfaces relevant ones to qualified students based on their track performance.
-- **Student analytics dashboard** — a centralized view of grades, attendance compliance, and track completion in real time.
-- **Student enrollment & progress tracking** — students enroll into Tracks; their academic record and progress are tracked from day one.
+* **Centralize Training Initiatives** — Bring all training initiatives into one unified platform, making them easier to manage and access.
+* **Simplify Student Enrollment** — Allow students to browse available initiatives and enroll through a single, user-friendly system.
+* **Self-Assessment System** — Enable students to evaluate their own skills and receive personalized feedback based on their results.
+* **Student Analytics Dashboard** — Provide visual reports and analytics that help students monitor their progress and identify strengths and improvement areas.
+* **Initiative Performance Dashboard** — Give administrators real-time insights into participation, engagement, assessment results, and overall initiative performance.
+* **Data-Driven Decision Making** — Transform assessment and participation data into meaningful insights that support continuous improvement for both students and initiative organizers.
 
 ## 🛠️ Technologies Used
 
