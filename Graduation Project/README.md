@@ -105,9 +105,11 @@ GHR4_SWD5_S2_PROJECT1/
 
 ## 🧩 Challenges Faced During Development
 
--
--
--
+- **Role-Based Access Without Identity Framework** — Implementing a custom authentication and authorization system from scratch (without ASP.NET Core Identity) required careful session management and manual route protection across Admin, Contributor, and Student controllers.
+- **EF Core Code-First Schema Evolution** — Managing frequent migration conflicts as the domain models evolved (User, Track, Initiative, Opportunity, Course) across multiple team members working in parallel branches.
+- **Self-Assessment & Analytics Aggregation** — Calculating real-time student progress metrics (completion rates, weekly momentum, skill-area breakdowns) purely from relational data required complex LINQ queries and careful ViewModel design to avoid N+1 performance issues.
+- **Dynamic Filtering Without Full Page Reload** — Building the opportunity filtering feature (`pathway.js`) using Vanilla JS to filter and re-render cards client-side while keeping the UI in sync with server-side data.
+- **Data Seeding for a Multi-Role System** — Designing `DataSeeder.cs` to consistently seed realistic, interrelated data (Users → Profiles → Enrollments → Assessments) across all roles without foreign key violations or seed duplication on repeated `database update` runs.
 
 ## 🔮 Future Improvements
 
@@ -129,7 +131,7 @@ GHR4_SWD5_S2_PROJECT1/
 
 ## 🎬 Demo Video
 
-[[Demo video link here]]: (https://drive.google.com/drive/folders/1pNGOzwELS6fOEitdNlNXRGiOHFUJV9GC)
+[Demo video link here](https://drive.google.com/drive/folders/1pNGOzwELS6fOEitdNlNXRGiOHFUJV9GC)
 
 ## 📄 Requirements Document
 
