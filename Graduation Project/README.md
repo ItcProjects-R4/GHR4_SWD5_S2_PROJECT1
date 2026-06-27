@@ -129,7 +129,7 @@ GHR4_SWD5_S2_PROJECT1/
 
 ## 🎬 Demo Video
 
-[[Demo video link here]](https://drive.google.com/drive/folders/1pNGOzwELS6fOEitdNlNXRGiOHFUJV9GC)
+[[Demo video link here]]: (https://drive.google.com/drive/folders/1pNGOzwELS6fOEitdNlNXRGiOHFUJV9GC)
 
 ## 📄 Requirements Document
 
